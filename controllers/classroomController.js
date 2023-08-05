@@ -55,3 +55,19 @@ exports.classroom_delete = async (req, res) => {
         res.status(500).json({ message: "server error" });
     }
 }
+exports.classroom_search = async (req, res) => {
+    try {
+        const query = req.query.q; // Get the search query from the request query parameters
+        const searchResults = await Classroom.find({
+            $or: [
+                { courseName: { $regex: query, $options: "i" } }, // Case-insensitive search for courseName
+                { semester: { $regex: query, $options: "i" } }, // Case-insensitive search for semester
+                { location: { $regex: query, $options: "i" } }, // Case-insensitive search for location
+            ],
+        });
+        res.json(searchResults);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "server error" });
+    }
+}

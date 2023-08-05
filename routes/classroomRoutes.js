@@ -7,4 +7,5 @@ router.get("/:id", classroomController.classroom_detail);
 router.post("/", classroomController.classroom_create);
 router.put("/:id", classroomController.classroom_update);
 router.delete("/:id", classroomController.classroom_delete);
+router.get("/search", classroomController.classroom_search);
 module.exports = router;

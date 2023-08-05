@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static("public"));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, {
@@ -39,6 +40,10 @@ const pusher = new Pusher({
   secret: "881c75b4fd8e21a54379",
   cluster: "mt1",
   useTLS: true,
+});
+// Render the index.html file
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/index.html");
 });
 
 // API routes
@@ -113,6 +118,23 @@ app.delete("/:id", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+app.get("/search", async (req, res) => {
+  try {
+    const query = req.query.q; // Get the search query from the request query parameters
+    const searchResults = await Classroom.find({
+      $or: [
+        { courseName: { $regex: query, $options: "i" } },
+        { semester: { $regex: query, $options: "i" } },
+        { location: { $regex: query, $options: "i" } },
+      ],
+    });
+    res.json(searchResults);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 pusher.trigger("my-channel", "my-event", {
   message: "hello world",
 });

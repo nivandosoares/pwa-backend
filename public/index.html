@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classroom Search</title>
+    <!-- Add Materialize CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <style>
+      /* Add custom styles here */
+      body {
+        padding: 20px;
+      }
+      /* Style for the link */
+      .logo-link {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        text-transform: capitalize;
+      }
+      .logo-link span {
+        font-weight: bold;
+      }
+    </style>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+  </head>
+  <body>
+    <div class="container center-align">
+      <div class="row center-align">
+        <div class="input-field col s12 m8 offset-m2">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by course name, semester, or location"
+          />
+          <label for="searchInput">Enter your search query</label>
+        </div>
+        <div class="input-field col s12 m2">
+          <a class="btn waves-effect waves-light" onclick="searchClassrooms()"
+            >Search</a
+          >
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="section center-align">
+        <h4>Search Results:</h4>
+        <div class="collection" id="searchResults">
+          <!-- Search results will be added here -->
+        </div>
+      </div>
+      <div class="row center-align">
+        <div class="col s12 m8 offset-m2">
+          <h5>Preview Searches:</h5>
+          <ul id="previewSearches" class="collection"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+      // Initialize Pusher with your credentials
+      const pusher = new Pusher("b95f2cce2e835c34e89f", {
+        cluster: "mt1",
+        useTLS: true,
+      });
+
+      // Subscribe to the "classroom-listed" event for real-time updates
+      const channel = pusher.subscribe("my-channel");
+      channel.bind("classroom-listed", function (data) {
+        // Update the search results with the new data
+        displaySearchResults(data.classrooms);
+      });
+
+      // Global variable to store the most recent searches
+      const recentSearches = [];
+
+      // Function to display the most recent searches in the "previewSearches" section
+      function displayRecentSearches() {
+        const previewSearches = document.getElementById("previewSearches");
+        previewSearches.innerHTML = "";
+
+        recentSearches.forEach((query) => {
+          const listItem = document.createElement("li");
+          listItem.classList.add("collection-item");
+          listItem.textContent = query;
+          previewSearches.appendChild(listItem);
+        });
+      }
+
+      // Function to perform the search and display the results
+      function searchClassrooms() {
+        const query = document.getElementById("searchInput").value;
+        fetch(`/search?q=${encodeURIComponent(query)}`)
+          .then((response) => response.json())
+          .then((data) => {
+            // Display the search results
+            displaySearchResults(data);
+
+            // Store the search results for real-time updates
+            channel.bind("my-channel", "classroom-listed", {
+              classrooms: data,
+            });
+
+            // Store the search query in recentSearches and display recent searches
+            recentSearches.push(query);
+            if (recentSearches.length > 5) {
+              recentSearches.shift(); // Remove the oldest search to keep only 5 recent searches
+            }
+            displayRecentSearches();
+          })
+          .catch((error) => {
+            console.error(error);
+            const searchResults = document.getElementById("searchResults");
+            searchResults.innerHTML =
+              '<p class="red-text">Error fetching search results.</p>';
+          });
+      }
+
+      // Initial display of recent searches on page load
+      displayRecentSearches();
+
+      // Function to display the search results
+      function displaySearchResults(classrooms) {
+        const searchResults = document.getElementById("searchResults");
+        searchResults.innerHTML = "";
+        classrooms.forEach((classroom) => {
+          const resultItem = document.createElement("a");
+          resultItem.classList.add("collection-item");
+          resultItem.innerHTML = `
+        <h5 class="teal-text">${classroom.courseName}</h5>
+        <p class="grey-text">Semester: ${classroom.semester}</p>
+        <p class="grey-text">Location: ${classroom.location}</p>
+      `;
+          searchResults.appendChild(resultItem);
+        });
+      }
+    </script>
+  </body>
+</html>
