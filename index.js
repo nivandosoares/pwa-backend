@@ -31,10 +31,24 @@ const classroomSchema = new mongoose.Schema({
 
 const Classroom = mongoose.model("Classroom", classroomSchema);
 
+const Pusher = require("pusher");
+
+const pusher = new Pusher({
+  appId: "1646819",
+  key: "b95f2cce2e835c34e89f",
+  secret: "881c75b4fd8e21a54379",
+  cluster: "mt1",
+  useTLS: true,
+});
+
 // API routes
 app.get("/", async (req, res) => {
   try {
     const classrooms = await Classroom.find();
+    pusher.trigger("my-channel", "classroom-listed", {
+      message: "hello world from GET request",
+      classrooms,
+    });
     res.json(classrooms);
   } catch (error) {
     console.error(error);
@@ -48,6 +62,15 @@ app.post("/", async (req, res) => {
     const { courseName, semester, location } = req.body;
     const newClassroom = new Classroom({ courseName, semester, location });
     const savedClassroom = await newClassroom.save();
+
+    // Enviar notificação para o canal "my-channel" e channelo "classroom-created"
+    pusher.trigger(
+      "my-channel",
+      "classroom-created",
+      { message: "new data added:" },
+      savedClassroom
+    );
+
     res.status(201).json(savedClassroom);
   } catch (error) {
     console.error(error);
@@ -65,22 +88,33 @@ app.put("/:id", async (req, res) => {
       { courseName, semester, location },
       { new: true }
     );
+
+    // Enviar notificação para o canal "my-channel" e channelo "classroom-updated"
+    pusher.trigger("my-channel", "classroom-updated", updatedClassroom);
+
     res.json(updatedClassroom);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 });
+
 // Delete an existing classroom
 app.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const deletedClassroom = await Classroom.findByIdAndDelete(id);
+
+    // Enviar notificação para o canal "my-channel" e channelo "classroom-deleted"
+
     res.json(deletedClassroom);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
+});
+pusher.trigger("my-channel", "my-event", {
+  message: "hello world",
 });
 // Start the server
 app.listen(PORT, () => {
