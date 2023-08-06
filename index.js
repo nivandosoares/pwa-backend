@@ -45,46 +45,34 @@ const pusher = new Pusher({
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");
 });
-
+// Define a route for the manage page
+app.get("/manage", (req, res) => {
+  res.sendFile(__dirname + "/public/manage.html");
+});
 // API routes
-app.get("/", async (req, res) => {
+app.get("/classrooms", async (req, res) => {
   try {
     const classrooms = await Classroom.find();
-    pusher.trigger("my-channel", "classroom-listed", {
-      message: "hello world from GET request",
-      classrooms,
-    });
-    res.json(classrooms);
+    res.json(classrooms); // Respond with JSON data
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "server error" });
   }
 });
 
-// Add a new classroom
-app.post("/", async (req, res) => {
+app.post("/classrooms", async (req, res) => {
   try {
     const { courseName, semester, location } = req.body;
     const newClassroom = new Classroom({ courseName, semester, location });
     const savedClassroom = await newClassroom.save();
-
-    // Enviar notificação para o canal "my-channel" e channelo "classroom-created"
-    pusher.trigger(
-      "my-channel",
-      "classroom-created",
-      { message: "new data added:" },
-      savedClassroom
-    );
-
-    res.status(201).json(savedClassroom);
+    res.status(201).json(savedClassroom); // Respond with JSON data
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-// Update an existing classroom
-app.put("/:id", async (req, res) => {
+app.put("/classrooms/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { courseName, semester, location } = req.body;
@@ -93,26 +81,18 @@ app.put("/:id", async (req, res) => {
       { courseName, semester, location },
       { new: true }
     );
-
-    // Enviar notificação para o canal "my-channel" e channelo "classroom-updated"
-    pusher.trigger("my-channel", "classroom-updated", updatedClassroom);
-
-    res.json(updatedClassroom);
+    res.json(updatedClassroom); // Respond with JSON data
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 });
 
-// Delete an existing classroom
-app.delete("/:id", async (req, res) => {
+app.delete("/classrooms/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const deletedClassroom = await Classroom.findByIdAndDelete(id);
-
-    // Enviar notificação para o canal "my-channel" e channelo "classroom-deleted"
-
-    res.json(deletedClassroom);
+    res.json(deletedClassroom); // Respond with JSON data
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

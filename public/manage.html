@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Manage Page</title>
+    <!-- Add Materialize CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="center-align">Manage Rooms</h1>
+
+      <!-- Add room form -->
+      <div class="section">
+        <h4>Add New Room:</h4>
+        <div class="row">
+          <div class="input-field col s12">
+            <input
+              type="text"
+              id="courseName"
+              placeholder="Enter Course Name"
+            />
+            <label for="courseName">Course Name</label>
+          </div>
+          <div class="input-field col s12">
+            <input type="text" id="semester" placeholder="Enter Semester" />
+            <label for="semester">Semester</label>
+          </div>
+          <div class="input-field col s12">
+            <input type="text" id="location" placeholder="Enter Location" />
+            <label for="location">Location</label>
+          </div>
+          <a class="btn waves-effect waves-light" onclick="addRoom()"
+            >Add Room</a
+          >
+        </div>
+      </div>
+
+      <!-- Room list -->
+      <div class="section center-align">
+        <h4>Existing Rooms:</h4>
+        <ul id="roomList" class="collection">
+          <!-- Edit and Delete buttons should pass room data as arguments -->
+          <!-- Items will be populated here through JavaScript -->
+        </ul>
+      </div>
+    </div>
+
+    <!-- Modal Structure for editing a room -->
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <h4>Edit Room</h4>
+        <div class="row">
+          <div class="input-field col s12">
+            <input type="hidden" id="editRoomId" />
+            <input
+              type="text"
+              id="editCourseName"
+              placeholder="Enter Course Name"
+            />
+            <label for="editCourseName">Course Name</label>
+          </div>
+          <div class="input-field col s12">
+            <input type="text" id="editSemester" placeholder="Enter Semester" />
+            <label for="editSemester">Semester</label>
+          </div>
+          <div class="input-field col s12">
+            <input type="text" id="editLocation" placeholder="Enter Location" />
+            <label for="editLocation">Location</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!-- Edit button (initially displayed) -->
+        <a
+          id="editEditButton"
+          class="btn waves-effect waves-light"
+          onclick="editRoom()"
+          >Edit</a
+        >
+        <!-- Save button (displayed when "Edit" button is clicked) -->
+        <a
+          id="editSaveButton"
+          class="btn waves-effect waves-light"
+          onclick="saveEditedRoom()"
+          style="display: none"
+          >Save</a
+        >
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat"
+          >Cancel</a
+        >
+      </div>
+    </div>
+
+    <!-- Add Materialize JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+      // Function to add a new room
+      function addRoom() {
+        const courseName = document.getElementById("courseName").value;
+        const semester = document.getElementById("semester").value;
+        const location = document.getElementById("location").value;
+
+        fetch("/classrooms", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ courseName, semester, location }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Reset input fields after adding the room
+            document.getElementById("courseName").value = "";
+            document.getElementById("semester").value = "";
+            document.getElementById("location").value = "";
+
+            // Display the updated room list
+            fetchRooms();
+          })
+          .catch((error) => {
+            console.error(error);
+            // Handle error if necessary
+          });
+      }
+
+      // Function to fetch and display the existing rooms
+      function fetchRooms() {
+        fetch("/classrooms")
+          .then((response) => response.json())
+          .then((data) => {
+            const roomList = document.getElementById("roomList");
+            roomList.innerHTML = "";
+
+            data.forEach((room) => {
+              const listItem = document.createElement("li");
+              listItem.classList.add("collection-item");
+              listItem.innerHTML = `
+              <h5 class="teal-text">${room.courseName}</h5>
+              <p class="grey-text">Semester: ${room.semester}</p>
+              <p class="grey-text">Location: ${room.location}</p>
+              <div>
+                <a class="btn-small waves-effect waves-light" onclick="editRoom('${room._id}', '${room.courseName}', '${room.semester}', '${room.location}')">Edit</a>
+                <a class="btn-small waves-effect waves-light red" onclick="deleteRoom('${room._id}')">Delete</a>
+              </div>
+            `;
+              roomList.appendChild(listItem);
+            });
+          })
+          .catch((error) => {
+            console.error(error);
+            // Handle error if necessary
+          });
+      }
+
+      // Function to delete a room
+      function deleteRoom(roomId) {
+        fetch(`/classrooms/${roomId}`, {
+          method: "DELETE",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Display the updated room list
+            fetchRooms();
+          })
+          .catch((error) => {
+            console.error(error);
+            // Handle error if necessary
+          });
+      }
+
+      // Function to populate edit form and show the modal
+      function editRoom(roomId, courseName, semester, location) {
+        if (roomId && courseName && semester && location) {
+          // If arguments are provided, populate the edit form
+          document.getElementById("editRoomId").value = roomId;
+          document.getElementById("editCourseName").value = courseName;
+          document.getElementById("editSemester").value = semester;
+          document.getElementById("editLocation").value = location;
+
+          // Display the Save button and hide the Edit button
+          document.getElementById("editSaveButton").style.display = "inline";
+          document.getElementById("editEditButton").style.display = "none";
+        } else {
+          // If no arguments are provided, clear the edit form
+          document.getElementById("editRoomId").value = "";
+          document.getElementById("editCourseName").value = "";
+          document.getElementById("editSemester").value = "";
+          document.getElementById("editLocation").value = "";
+
+          // Hide the Save button and display the Edit button
+          document.getElementById("editSaveButton").style.display = "none";
+          document.getElementById("editEditButton").style.display = "inline";
+        }
+
+        // Open the edit modal
+        const modal = document.getElementById("editModal");
+        const instance = M.Modal.getInstance(modal);
+        instance.open();
+      }
+
+      // Function to save edited room
+      function saveEditedRoom() {
+        const roomId = document.getElementById("editRoomId").value;
+        const courseName = document.getElementById("editCourseName").value;
+        const semester = document.getElementById("editSemester").value;
+        const location = document.getElementById("editLocation").value;
+
+        fetch(`/classrooms/${roomId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ courseName, semester, location }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Close the edit modal
+            M.Modal.getInstance(document.getElementById("editModal")).close();
+
+            // Display the updated room list
+            fetchRooms();
+          })
+          .catch((error) => {
+            console.error(error);
+            // Handle error if necessary
+          });
+      }
+
+      // Function to initialize Materialize modal
+      document.addEventListener("DOMContentLoaded", function () {
+        var elems = document.querySelectorAll(".modal");
+        var instances = M.Modal.init(elems, {});
+      });
+
+      // Initial fetch of rooms on page load
+      fetchRooms();
+    </script>
+  </body>
+</html>
