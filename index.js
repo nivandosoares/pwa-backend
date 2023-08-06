@@ -33,6 +33,7 @@ const classroomSchema = new mongoose.Schema({
 const Classroom = mongoose.model("Classroom", classroomSchema);
 
 const Pusher = require("pusher");
+const version = process.env.APP_VERSION || "unknown";
 
 const pusher = new Pusher({
   appId: "1646819",
@@ -41,6 +42,11 @@ const pusher = new Pusher({
   cluster: "mt1",
   useTLS: true,
 });
+
+app.get("/version", (req, res) => {
+  res.send(version);
+});
+
 // Render the index.html file
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/public/index.html");

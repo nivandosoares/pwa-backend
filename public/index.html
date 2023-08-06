@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Classroom Search</title>
+    <title>Encontre sua sala</title>
     <!-- Add Materialize CSS -->
     <link
       rel="stylesheet"
@@ -24,6 +24,14 @@
       .logo-link span {
         font-weight: bold;
       }
+      .footer {
+        background-color: #f0f0f0;
+        padding: 20px;
+        text-align: center;
+        position: sticky;
+        bottom: 0;
+        width: 100%;
+      }
     </style>
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
   </head>
@@ -34,26 +42,26 @@
           <input
             type="text"
             id="searchInput"
-            placeholder="Search by course name, semester, or location"
+            placeholder="Procure pelo nome do seu curso:"
           />
-          <label for="searchInput">Enter your search query</label>
+          <label for="searchInput">Encontrar sala do curso:</label>
         </div>
         <div class="input-field col s12 m2">
           <a class="btn waves-effect waves-light" onclick="searchClassrooms()"
-            >Search</a
+            >Buscar</a
           >
         </div>
       </div>
       <div class="divider"></div>
       <div class="section center-align">
-        <h4>Search Results:</h4>
+        <h4>Resultados da busca:</h4>
         <div class="collection" id="searchResults">
           <!-- Search results will be added here -->
         </div>
       </div>
       <div class="row center-align">
         <div class="col s12 m8 offset-m2">
-          <h5>Preview Searches:</h5>
+          <h5>Seu histórico de buscas:</h5>
           <ul id="previewSearches" class="collection"></ul>
         </div>
       </div>
@@ -104,7 +112,13 @@
             channel.bind("my-channel", "classroom-listed", {
               classrooms: data,
             });
-
+            // Fetch the version from the server and update the placeholder
+            fetch("/version")
+              .then((response) => response.text())
+              .then((version) => {
+                document.getElementById("versionPlaceholder").textContent =
+                  version;
+              });
             // Store the search query in recentSearches and display recent searches
             recentSearches.push(query);
             if (recentSearches.length > 5) {

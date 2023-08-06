@@ -10,11 +10,11 @@
   </head>
   <body>
     <div class="container">
-      <h1 class="center-align">Manage Rooms</h1>
+      <h1 class="center-align">Admin:</h1>
 
       <!-- Add room form -->
       <div class="section">
-        <h4>Add New Room:</h4>
+        <h4>Adicionar nova sala:</h4>
         <div class="row">
           <div class="input-field col s12">
             <input
@@ -22,25 +22,25 @@
               id="courseName"
               placeholder="Enter Course Name"
             />
-            <label for="courseName">Course Name</label>
+            <label for="courseName">Nome do curso</label>
           </div>
           <div class="input-field col s12">
             <input type="text" id="semester" placeholder="Enter Semester" />
-            <label for="semester">Semester</label>
+            <label for="semester">Semestre</label>
           </div>
           <div class="input-field col s12">
             <input type="text" id="location" placeholder="Enter Location" />
-            <label for="location">Location</label>
+            <label for="location">Localização da sala (Bloco X, sala Y):</label>
           </div>
           <a class="btn waves-effect waves-light" onclick="addRoom()"
-            >Add Room</a
+            >Adicionar</a
           >
         </div>
       </div>
 
       <!-- Room list -->
       <div class="section center-align">
-        <h4>Existing Rooms:</h4>
+        <h4>Salas já registradas:</h4>
         <ul id="roomList" class="collection">
           <!-- Edit and Delete buttons should pass room data as arguments -->
           <!-- Items will be populated here through JavaScript -->
@@ -51,7 +51,7 @@
     <!-- Modal Structure for editing a room -->
     <div id="editModal" class="modal">
       <div class="modal-content">
-        <h4>Edit Room</h4>
+        <h4>Alterar sala</h4>
         <div class="row">
           <div class="input-field col s12">
             <input type="hidden" id="editRoomId" />
@@ -60,15 +60,15 @@
               id="editCourseName"
               placeholder="Enter Course Name"
             />
-            <label for="editCourseName">Course Name</label>
+            <label for="editCourseName">Curso</label>
           </div>
           <div class="input-field col s12">
             <input type="text" id="editSemester" placeholder="Enter Semester" />
-            <label for="editSemester">Semester</label>
+            <label for="editSemester">Semestre</label>
           </div>
           <div class="input-field col s12">
             <input type="text" id="editLocation" placeholder="Enter Location" />
-            <label for="editLocation">Location</label>
+            <label for="editLocation">Localizção</label>
           </div>
         </div>
       </div>
@@ -78,7 +78,7 @@
           id="editEditButton"
           class="btn waves-effect waves-light"
           onclick="editRoom()"
-          >Edit</a
+          >Editar</a
         >
         <!-- Save button (displayed when "Edit" button is clicked) -->
         <a
@@ -86,10 +86,10 @@
           class="btn waves-effect waves-light"
           onclick="saveEditedRoom()"
           style="display: none"
-          >Save</a
+          >Salvar alterações</a
         >
         <a href="#!" class="modal-close waves-effect waves-green btn-flat"
-          >Cancel</a
+          >Cancelar</a
         >
       </div>
     </div>
