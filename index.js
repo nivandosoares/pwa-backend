@@ -120,7 +120,20 @@ app.get("/search", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+// Middleware to get the version from version.json
+app.use((req, res, next) => {
+  const versionPath = path.join(__dirname, "version.json");
 
+  fs.readFile(versionPath, "utf8", (err, data) => {
+    if (err) {
+      console.error("Error reading version file:", err);
+    } else {
+      const versionData = JSON.parse(data);
+      res.locals.version = versionData.version;
+    }
+    next();
+  });
+});
 pusher.trigger("my-channel", "my-event", {
   message: "hello world",
 });
