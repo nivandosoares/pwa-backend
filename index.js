@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const env = require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 5000;
+const path = require("path");
+const fs = require("fs");
 
 // Middleware
 app.use(cors());
@@ -134,9 +136,7 @@ app.use((req, res, next) => {
     next();
   });
 });
-pusher.trigger("my-channel", "my-event", {
-  message: "hello world",
-});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

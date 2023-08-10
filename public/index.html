@@ -73,7 +73,7 @@
         <div class="row">
           <div class="col s12">
             <p class="grey-text text-lighten-4">
-              Versão: 2023.08.05 (05/08/2023)
+              Versão: 2.0.0 (10/08/2023) | <a href ="#">notas de versão</a>
             </p>
           </div>
         </div>
@@ -87,6 +87,19 @@
         cluster: "mt1",
         useTLS: true,
       });
+
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("/service-worker.js")
+    .then((registration) => {
+      console.log("Service Worker registrado com sucesso!", registration);
+    })
+    .catch((error) => {
+      console.error("Erro ao registrar o Service Worker:", error);
+    });
+}
+
 
       // Subscribe to the "classroom-listed" event for real-time updates
       const channel = pusher.subscribe("my-channel");
