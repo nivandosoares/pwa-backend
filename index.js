@@ -7,7 +7,6 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const path = require("path");
 const fs = require("fs");
-const ClassroomFull = require("./models/classroomfullModel");
 
 // Middleware
 app.use(cors());
@@ -90,7 +89,7 @@ app.put("/classrooms/:id", async (req, res) => {
 app.delete("/classrooms/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedClassroom = await ClassroomFull.findByIdAndDelete(id);
+    const deletedClassroom = await Classroom.findByIdAndDelete(id);
     res.json(deletedClassroom); // Respond with JSON data
   } catch (error) {
     console.error(error);
@@ -131,21 +130,21 @@ app.use((req, res, next) => {
 // Dashboard route
 app.get("/dashboard/overview", async (req, res) => {
   try {
-    const totalClassrooms = await ClassroomFull.countDocuments();
+    const totalClassrooms = await Classroom.countDocuments();
 
-    const availableResources = await ClassroomFull.aggregate([
+    const availableResources = await Classroom.aggregate([
       { $unwind: "$resources" },
       { $match: { "resources.available": true } },
       { $group: { _id: null, count: { $sum: 1 } } },
     ]);
 
-    const resourcesInUse = await ClassroomFull.aggregate([
+    const resourcesInUse = await Classroom.aggregate([
       { $unwind: "$resources" },
       { $match: { "resources.available": false } },
       { $group: { _id: null, count: { $sum: 1 } } },
     ]);
 
-    const totalAlerts = await ClassroomFull.aggregate([
+    const totalAlerts = await Classroom.aggregate([
       { $unwind: "$alerts_manutencao" },
       { $group: { _id: null, count: { $sum: 1 } } },
     ]);
@@ -170,7 +169,7 @@ app.get("/dashboard/overview", async (req, res) => {
 
 app.get("/dashboard/available-resources", async (req, res) => {
   try {
-    const availableResources = await ClassroomFull.aggregate([
+    const availableResources = await Classroom.aggregate([
       { $unwind: "$resources" },
       { $match: { "resources.available": true } },
       { $group: { _id: "$resources.name", count: { $sum: 1 } } },
@@ -187,7 +186,7 @@ app.get("/dashboard/available-resources", async (req, res) => {
 
 app.get("/dashboard/alerts", async (req, res) => {
   try {
-    const alerts = await ClassroomFull.aggregate([
+    const alerts = await Classroom.aggregate([
       { $unwind: "$alerts_manutencao" },
       {
         $project: {
@@ -209,7 +208,7 @@ app.get("/dashboard/alerts", async (req, res) => {
 
 app.get("/dashboard/classrooms-resources", async (req, res) => {
   try {
-    const classroomsResources = await ClassroomFull.find(
+    const classroomsResources = await Classroom.find(
       {},
       "courseName location resources"
     );
@@ -223,7 +222,7 @@ app.get("/dashboard/classrooms-resources", async (req, res) => {
 
 app.get("/dashboard/room-alerts", async (req, res) => {
   try {
-    const roomAlerts = await ClassroomFull.find(
+    const roomAlerts = await Classroom.find(
       { "alerts_manutencao.0": { $exists: true } },
       "courseName location alerts_manutencao"
     );
@@ -239,7 +238,7 @@ app.get("/dashboard/room-alerts", async (req, res) => {
 
 app.get("/dashboard/classrooms-history", async (req, res) => {
   try {
-    const classroomsHistory = await ClassroomFull.aggregate([
+    const classroomsHistory = await Classroom.aggregate([
       { $unwind: "$history" },
       {
         $group: {
@@ -262,13 +261,13 @@ app.get("/dashboard/classrooms-history", async (req, res) => {
 
 app.get("/dashboard/statistics", async (req, res) => {
   try {
-    const avgResourcesPerRoom = await ClassroomFull.aggregate([
+    const avgResourcesPerRoom = await Classroom.aggregate([
       { $match: { resources: { $exists: true } } }, // Filtra os documentos com o campo 'resources'
       { $project: { _id: 0, resourcesCount: { $size: "$resources" } } },
       { $group: { _id: null, avgResources: { $avg: "$resourcesCount" } } },
     ]);
 
-    const avgOccupancyRate = await ClassroomFull.aggregate([
+    const avgOccupancyRate = await Classroom.aggregate([
       { $unwind: "$history" },
       {
         $group: {
