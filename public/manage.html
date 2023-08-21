@@ -103,7 +103,7 @@
         const semester = document.getElementById("semester").value;
         const location = document.getElementById("location").value;
 
-        fetch("/classrooms", {
+        fetch("/classrooms/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -128,7 +128,7 @@
 
       // Function to fetch and display the existing rooms
       function fetchRooms() {
-        fetch("/classrooms")
+        fetch("/classrooms/json")
           .then((response) => response.json())
           .then((data) => {
             const roomList = document.getElementById("roomList");

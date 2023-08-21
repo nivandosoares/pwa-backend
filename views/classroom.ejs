@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sala - <%= room.courseName %></title>
+    <title>Sala - <%= classroom.courseName %></title>
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css"
       rel="stylesheet"
@@ -14,12 +14,12 @@
 
     <main>
       <div class="container">
-        <h3>Sala: <%= room.courseName %></h3>
-        <p>Localização: <%= room.location %></p>
-        <p>Semestre: <%= room.semester %></p>
+        <h3>Sala: <%= classroom.courseName %></h3>
+        <p>Localização: <%= classroom.location %></p>
+        <p>Semestre: <%= classroom.semester %></p>
         <h5>Recursos Disponíveis:</h5>
         <ul>
-          <% room.resources.forEach(resource => { %>
+          <% classroom.resources.forEach(resource => { %>
           <li>
             <%= resource.name %> - <%= resource.available ? 'Disponível' :
             'Indisponível' %>
@@ -28,13 +28,13 @@
         </ul>
         <h5>Recursos Disponíveis:</h5>
         <ul>
-          <% room.features.forEach(feature => { %>
+          <% classroom.features.forEach(feature => { %>
           <li><%= feature %></li>
           <% }) %>
         </ul>
         <h5>Alertas de Manutenção:</h5>
         <ul>
-          <% room.alerts_manutencao.forEach(alert => { %>
+          <% classroom.alerts_manutencao.forEach(alert => { %>
           <li>
             Recurso: <%= alert.resource %>, Descrição: <%= alert.descricao %>
           </li>

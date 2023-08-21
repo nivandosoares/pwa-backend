@@ -1,6 +1,15 @@
 const Classroom = require("../models/classroomModel");
 
 module.exports = {
+  getClassroomJson: async (req, res) => {
+    try {
+      const classrooms = await Classroom.find();
+      res.json(classrooms);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "server error" });
+    }
+  },
   getAllClassrooms: async (req, res) => {
     try {
       const classrooms = await Classroom.find();
@@ -71,7 +80,7 @@ module.exports = {
       if (!classroom) {
         return res.status(404).send("Sala não encontrada");
       }
-      res.render("room", {
+      res.render("classroom", {
         room: classroom,
       });
     } catch (error) {

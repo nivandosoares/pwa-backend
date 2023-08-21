@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const dashboardController = require("../controllers/dashboardController");
 
+router.get("/", dashboardController.getDashboard);
 router.get("/overview", dashboardController.getOverview);
 router.get("/available-resources", dashboardController.getAvailableResources);
 router.get("/alerts", dashboardController.getAlerts);

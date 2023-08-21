@@ -155,4 +155,7 @@ module.exports = {
       res.status(500).json({ error: "Erro ao obter dados da visão geral" });
     }
   },
+  getDashboard: async (req, res) => {
+    res.render("dashboard");
+  },
 };
