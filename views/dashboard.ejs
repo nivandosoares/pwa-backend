@@ -1,0 +1,196 @@
+<head>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet" />
+</head>
+  
+  <body>
+  
+    <ul id="slide-out" class="side-nav fixed z-depth-2">
+        <li class="center no-padding">
+          <div class="indigo darken-2 white-text" style="height: 180px;">
+            <div class="row">
+              <img style="margin-top: 5%;" width="100" height="100" src="https://res.cloudinary.com/dacg0wegv/image/upload/t_media_lib_thumb/v1463990208/photo_dkkrxc.png" class="circle responsive-img" />
+              <p style="margin-top: -13%;">Tirth Patel</p>
+            </div>
+          </div>
+        </li>
+    
+        <li id="dash_dashboard"><a class="waves-effect" href="#!"><b>Dashboard</b></a></li>
+    
+        <ul class="collapsible" data-collapsible="accordion">
+          <li id="dash_rooms">
+            <div id="dash_rooms_header" class="collapsible-header waves-effect"><b>Salas</b></div>
+            <div id="dash_rooms_body" class="collapsible-body">
+              <ul>
+                <!-- Opções de gerenciamento de salas aqui -->
+              </ul>
+            </div>
+          </li>
+    
+          <li id="dash_resources">
+            <div id="dash_resources_header" class="collapsible-header waves-effect"><b>Recursos</b></div>
+            <div id="dash_resources_body" class="collapsible-body">
+              <ul>
+                <!-- Opções de gerenciamento de recursos aqui -->
+              </ul>
+            </div>
+          </li>
+    
+          <li id="dash_schedule">
+            <div id="dash_schedule_header" class="collapsible-header waves-effect"><b>Agendamento</b></div>
+            <div id="dash_schedule_body" class="collapsible-body">
+              <ul>
+                <!-- Opções de agendamento aqui -->
+              </ul>
+            </div>
+          </li>
+    
+          <li id="dash_maintenance">
+            <div id="dash_maintenance_header" class="collapsible-header waves-effect"><b>Manutenção</b></div>
+            <div id="dash_maintenance_body" class="collapsible-body">
+              <ul>
+                <!-- Opções de gerenciamento de manutenção aqui -->
+              </ul>
+            </div>
+          </li>
+    
+          <li id="dash_expenses">
+            <div id="dash_expenses_header" class="collapsible-header waves-effect"><b>Gastos</b></div>
+            <div id="dash_expenses_body" class="collapsible-body">
+              <ul>
+                <!-- Opções de gerenciamento de gastos aqui -->
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </ul>
+    
+  <% include ('header')%>
+
+  <main>
+    <div class="row">
+      <!-- Seção de Gerenciamento de Salas -->
+      <div class="col s12 m6 l6">
+        <div style="padding: 35px;" align="center" class="card">
+          <div class="row">
+            <div class="left card-title">
+              <b>Gerenciamento de Salas</b>
+            </div>
+          </div>
+          <div class="row">
+            <a href="#!">
+              <div style="padding: 30px;" class="grey lighten-3 col s5 waves-effect">
+                <i class="indigo-text text-lighten-1 large material-icons">meeting_room</i>
+                <span class="indigo-text text-lighten-1"><h5>Salas</h5></span>
+              </div>
+            </a>
+            <div class="col s1">&nbsp;</div>
+            <div class="col s1">&nbsp;</div>
+  
+            <a href="#!">
+              <div style="padding: 30px;" class="grey lighten-3 col s5 waves-effect">
+                <i class="indigo-text text-lighten-1 large material-icons">dns</i>
+                <span class="indigo-text text-lighten-1"><h5>Recursos</h5></span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col s6">
+        <div style="padding: 35px;" align="center" class="card">
+          <div class="row">
+            <div class="left card-title">
+              <b>Agendamento</b>
+            </div>
+          </div>
+          <div class="row">
+            <a href="#!">
+              <div style="padding: 30px;" class="grey lighten-3 col s5 waves-effect">
+                <i class="indigo-text text-lighten-1 large material-icons">schedule</i>
+                <span class="indigo-text text-lighten-1"><h5>Agendamentos</h5></span>
+              </div>
+            </a>
+            <div class="col s1">&nbsp;</div>
+            <div class="col s1">&nbsp;</div>
+  
+            <a href="#!">
+              <div style="padding: 30px;" class="grey lighten-3 col s5 waves-effect">
+                <i class="indigo-text text-lighten-1 large material-icons">settings</i>
+                <span class="indigo-text text-lighten-1"><h5>Manutenção</h5></span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col s6">
+        <div style="padding: 35px;" align="center" class="card">
+          <div class="row">
+            <div class="left card-title">
+              <b>Gastos</b>
+            </div>
+          </div>
+          <div class="row">
+            <a href="#!">
+              <div style="padding: 30px;" class="grey lighten-3 col s5 waves-effect">
+                <i class="indigo-text text-lighten-1 large material-icons">attach_money</i>
+                <span class="indigo-text text-lighten-1"><h5>Gastos</h5></span>
+              </div>
+            </a>
+            <div class="col s1">&nbsp;</div>
+            <div class="col s1">&nbsp;</div>
+  
+            <a href="#!">
+              <div style="padding: 30px;" class="grey lighten-3 col s5 waves-effect">
+                <i class="indigo-text text-lighten-1 large material-icons">receipt</i>
+                <span class="indigo-text text-lighten-1"><h5>Relatórios</h5></span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+      <div class="fixed-action-btn click-to-toggle" style="bottom: 45px; right: 24px;">
+        <a class="btn-floating btn-large pink waves-effect waves-light">
+          <i class="large material-icons">add</i>
+        </a>
+  
+        <ul>
+          <li>
+            <a class="btn-floating red"><i class="material-icons">note_add</i></a>
+            <a href="" class="btn-floating fab-tip">Add a note</a>
+          </li>
+  
+          <li>
+            <a class="btn-floating yellow darken-1"><i class="material-icons">add_a_photo</i></a>
+            <a href="" class="btn-floating fab-tip">Add a photo</a>
+          </li>
+  
+          <li>
+            <a class="btn-floating green"><i class="material-icons">alarm_add</i></a>
+            <a href="" class="btn-floating fab-tip">Add an alarm</a>
+          </li>
+  
+          <li>
+            <a class="btn-floating blue"><i class="material-icons">vpn_key</i></a>
+            <a href="" class="btn-floating fab-tip">Add a master password</a>
+          </li>
+        </ul>
+      </div>
+    </main>
+  
+     <% include ('footer')%>
+      
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css" rel="stylesheet" />
+
+  </body>
+  
+  </html>

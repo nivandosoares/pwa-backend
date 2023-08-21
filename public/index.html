@@ -124,40 +124,35 @@ if ("serviceWorker" in navigator) {
         });
       }
 
-      // Function to perform the search and display the results
-      function searchClassrooms() {
-        const query = document.getElementById("searchInput").value;
-        fetch(`/search?q=${encodeURIComponent(query)}`)
-          .then((response) => response.json())
-          .then((data) => {
-            // Display the search results
-            displaySearchResults(data);
+function searchClassrooms() {
+  const query = document.getElementById("searchInput").value;
+  const encodedQuery = encodeURIComponent(query);
+  const regexPattern = `.*${encodedQuery}.*`; // Construct a regular expression pattern
+  fetch(`/classrooms/search?q=${regexPattern}`)
+    .then((response) => response.json())
+    .then((data) => {
+      // Display the search results
+      displaySearchResults(data);
 
-            // Store the search results for real-time updates
-            channel.bind("my-channel", "classroom-listed", {
-              classrooms: data,
-            });
-            // Fetch the version from the server and update the placeholder
-            fetch("/version")
-              .then((response) => response.text())
-              .then((version) => {
-                document.getElementById("versionPlaceholder").textContent =
-                  version;
-              });
-            // Store the search query in recentSearches and display recent searches
-            recentSearches.push(query);
-            if (recentSearches.length > 5) {
-              recentSearches.shift(); // Remove the oldest search to keep only 5 recent searches
-            }
-            displayRecentSearches();
-          })
-          .catch((error) => {
-            console.error(error);
-            const searchResults = document.getElementById("searchResults");
-            searchResults.innerHTML =
-              '<p class="red-text">Error fetching search results.</p>';
-          });
+      // Store the search results for real-time updates
+      channel.bind("my-channel", "classroom-listed", {
+        classrooms: data,
+      });
+
+      // Store the search query in recentSearches and display recent searches
+      recentSearches.push(query);
+      if (recentSearches.length > 5) {
+        recentSearches.shift(); // Remove the oldest search to keep only 5 recent searches
       }
+      displayRecentSearches();
+    })
+    .catch((error) => {
+      console.error(error);
+      const searchResults = document.getElementById("searchResults");
+      searchResults.innerHTML =
+        '<p class="red-text">Error fetching search results.</p>';
+    });
+}
 
       // Initial display of recent searches on page load
       displayRecentSearches();

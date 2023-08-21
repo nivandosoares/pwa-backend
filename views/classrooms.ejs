@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Salas</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <% include ('header') %>
+
+    <main>
+      <div class="container">
+        <h3>Todas as Salas</h3>
+        <div class="row">
+          <% classrooms.forEach(room => { %>
+          <div class="col s12 m6">
+            <div class="card">
+              <div class="card-content">
+                <span class="card-title"><%= room.courseName %></span>
+                <p>Localização: <%= room.location %></p>
+                <p>Semestre: <%= room.semester %></p>
+              </div>
+              <div class="card-action">
+                <a href="/room/<%= room._id %>">Ver Detalhes</a>
+              </div>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+      </div>
+    </main>
+
+    <% include ('footer') %>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+  </body>
+</html>
