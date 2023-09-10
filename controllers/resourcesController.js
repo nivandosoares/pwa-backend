@@ -24,7 +24,7 @@ module.exports = {
   createResources: async (req, res) => {
     try {
       const { name, available, quantity } = req.body;
-      const newResources = new Resources({ name, available, quantity });
+      const newResources = new Resources({ name, quantity, available });
       const savedResources = await newResources.save();
       res.status(201).json(savedResources); // Respond with JSON data
     } catch (error) {
@@ -35,10 +35,10 @@ module.exports = {
   updateResources: async (req, res) => {
     try {
       const { id } = req.params;
-      const { name, available, quantity } = req.body;
+      const { name, quantity, available } = req.body;
       const updatedResources = await Resources.findByIdAndUpdate(
         id,
-        { name, available, quantity },
+        { name, quantity, available },
         { new: true }
       );
       res.json(updatedResources); // Respond with JSON data
@@ -63,8 +63,8 @@ module.exports = {
       const searchResults = await Resources.find({
         $or: [
           { name: { $regex: new RegExp(queryPattern, "i") } },
-          { available: { $regex: new RegExp(queryPattern, "i") } },
           { quantity: { $regex: new RegExp(queryPattern, "i") } },
+          { available: { $regex: new RegExp(queryPattern, "i") } },
         ],
       });
       res.json(searchResults);

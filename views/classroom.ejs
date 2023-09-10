@@ -12,35 +12,45 @@
   <body>
     <% include ('header') %>
 
-    <main>
-      <div class="container">
-        <h3>Sala: <%= room.courseName %></h3>
-        <p>Localização: <%= room.location %></p>
-        <p>Semestre: <%= room.semester %></p>
+    <main class="container">
+      <h3>Sala: <%= room.courseName %></h3>
+      <p>Localização: <%= room.location %></p>
+      <p>Semestre: <%= room.semester %></p>
+
+      <section>
         <h5>Recursos Disponíveis:</h5>
         <ul>
-          <% room.resources.forEach(resource => { %>
+          <% if (room && room.resources) { %> <%
+          room.resources.forEach(function(resource) { %>
           <li>
             <%= resource.name %> - <%= resource.available ? 'Disponível' :
             'Indisponível' %>
           </li>
-          <% }) %>
+          <% }); %> <% } else { %>
+          <li>Nenhum recurso disponível</li>
+          <% } %>
         </ul>
-        <h5>Recursos Disponíveis:</h5>
+      </section>
+
+      <section>
+        <h5>Características da Sala:</h5>
         <ul>
-          <% room.features.forEach(feature => { %>
+          <% room.features.forEach(function(feature) { %>
           <li><%= feature %></li>
-          <% }) %>
+          <% }); %>
         </ul>
+      </section>
+
+      <section>
         <h5>Alertas de Manutenção:</h5>
         <ul>
-          <% room.alerts_manutencao.forEach(alert => { %>
+          <% room.alerts_manutencao.forEach(function(alert) { %>
           <li>
             Recurso: <%= alert.resource %>, Descrição: <%= alert.descricao %>
           </li>
-          <% }) %>
+          <% }); %>
         </ul>
-      </div>
+      </section>
     </main>
 
     <% include ('footer') %>
