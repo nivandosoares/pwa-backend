@@ -5,9 +5,6 @@ const fs = require("fs");
 const dotenv = require("dotenv");
 dotenv.config();
 
-
-
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -26,8 +23,7 @@ app.set("view engine", "ejs");
 app.use("/", require("./routes/index"));
 app.use("/classrooms", require("./routes/classrooms"));
 app.use("/dashboard", require("./routes/dashboard"));
-
-
+app.use("/resources", require("./routes/resources"));
 
 // Start the server
 app.listen(PORT, () => {
